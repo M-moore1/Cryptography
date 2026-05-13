@@ -1,87 +1,40 @@
-alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-key_matrix = []
+"""Legacy interactive wrapper for the Vigenere cipher.
 
-################################################################
-#                       Support Functions                      #
-def make_alphabet(key):
-    split1, split2 = alphabet[:key], alphabet[key:]
-    new_alphabet = split2 + split1
-    return new_alphabet
+The maintained implementation lives in `src/crypto_lab/ciphers/vigenere.py`.
+"""
 
-def make_key_matrix():
-    for i in range(26):
-        j = make_alphabet(i)
-        key_matrix.append(j)
-    return key_matrix
-################################################################
+from __future__ import annotations
 
-################################################################
-#                       Key Generation                         #
-def gen_key(message, key):
-    key = key.lower()
-    key = list(key)
-    if len(message) == len(key):
-        return key
-    else:
-        for i in range(len(message) - len(key)):
-            key.append(key[i % len(key)])
-    return "".join(key)
-################################################################
+import sys
+from pathlib import Path
 
-################################################################
-#                          Encryption                          #
-def enc(message, key):
-    message = message.lower()
-    cipher_text = ''
-    for m, k in zip(message, key):
-        if (m in alphabet):
-            m_index = alphabet.index(m)
-            k_index = alphabet.index(k)
-            cipher_text += key_matrix[m_index][k_index]
-        else:
-            cipher_text += m
-    return cipher_text
-################################################################
+sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
 
-################################################################
-#                          Decryption                          #
-def dec(cipher_text, key):
-    cipher_text = cipher_text.lower()
-    message = ''
-    for c, k in zip(cipher_text, key):
-        for row in key_matrix:
-            if (row[0] == k and k in alphabet):
-                index = row.index(c)
-                message += alphabet[index]
-            else:
-                message += c
-    return message
-################################################################
+from crypto_lab.ciphers import vigenere_decrypt, vigenere_encrypt  # noqa: E402
 
-def main():
-    make_key_matrix()
+
+def main() -> None:
     print("-Welcome to the Vigenere Cipher-")
-    
-    while(True):
+    while True:
         print("1. Encrypt")
         print("2. Decrypt")
         print("3. Exit")
-        choice = int(input("Choose an option: "))
+        choice = input("Choose an option: ").strip()
 
-        if (choice == 1):
+        if choice == "1":
             message = input("Enter message: ")
-            key_word = input("Enter key word: ")
-            key = gen_key(message, key_word)
-            cipher_text = enc(message, key)
-            print(cipher_text)
-        elif (choice == 2):
-            cipher_text = input("Enter cipher text: ")
-            key_word = input("Enter key word: ")
-            key = gen_key(message, key_word)
-            #message = dec(cipher_text, key)
-            print(message)
-        elif (choice == 3):
+            key = input("Enter key word: ")
+            print(vigenere_encrypt(message, key))
+        elif choice == "2":
+            ciphertext = input("Enter cipher text: ")
+            key = input("Enter key word: ")
+            print(vigenere_decrypt(ciphertext, key))
+        elif choice == "3":
             break
+        else:
+            print("Please choose 1, 2, or 3.")
+
 
 if __name__ == "__main__":
     main()
+
