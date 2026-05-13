@@ -1,0 +1,19 @@
+[project]
+name = "crypto-lab"
+version = "1.0.0"
+description = "Educational implementations of classical ciphers, modern cryptography demos, and cryptanalysis tools."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Cryptography Project" }]
+license = { text = "MIT" }
+keywords = ["cryptography", "ciphers", "education", "rsa", "diffie-hellman"]
+
+[project.scripts]
+crypto-lab = "crypto_lab.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
